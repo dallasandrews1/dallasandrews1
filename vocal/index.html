@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E1117">
+<title>Sustain — Vocal Training Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700&family=Figtree:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1117;
+    --panel:#171B23;
+    --panel2:#1F242E;
+    --line:#2B3341;
+    --amber:#F0A233;
+    --amber-soft:rgba(240,162,51,.14);
+    --sage:#7FB49B;
+    --text:#E9E7E2;
+    --muted:#8C95A5;
+    --red:#D9634E;
+    --display:"Fraunces",Georgia,serif;
+    --body:"Figtree",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"DM Mono",ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--ink);color:var(--text);font-family:var(--body);
+    font-size:16px;line-height:1.5;
+    padding:0 0 96px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:0 18px}
+
+  /* ---------- header ---------- */
+  header{
+    padding:26px 0 18px;border-bottom:1px solid var(--line);margin-bottom:20px;
+  }
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 8px;
+  }
+  h1{
+    font-family:var(--display);font-weight:300;font-size:34px;line-height:1.05;
+    margin:0 0 10px;letter-spacing:-.01em;
+  }
+  h1 em{font-style:italic;color:var(--amber)}
+  .headline-row{display:flex;justify-content:space-between;align-items:flex-end;gap:14px}
+  .countdown{text-align:right;flex-shrink:0}
+  .countdown .num{font-family:var(--display);font-size:30px;font-weight:500;line-height:1;color:var(--amber)}
+  .countdown .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+  /* ---------- tabs ---------- */
+  nav.tabs{
+    position:fixed;bottom:0;left:0;right:0;z-index:40;
+    background:rgba(14,17,23,.94);backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+    padding:8px 0 max(10px,env(safe-area-inset-bottom));
+  }
+  .tabs-inner{max-width:640px;margin:0 auto;display:flex}
+  .tab{
+    flex:1;background:none;border:0;color:var(--muted);
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    padding:10px 4px;cursor:pointer;position:relative;
+  }
+  .tab[aria-selected="true"]{color:var(--amber)}
+  .tab[aria-selected="true"]::after{
+    content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:22px;height:2px;background:var(--amber);
+  }
+  .tab:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:4px}
+
+  /* ---------- generic ---------- */
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+  .section-label{
+    font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);margin:26px 0 12px;display:flex;align-items:center;gap:10px;
+  }
+  .section-label::after{content:"";flex:1;height:1px;background:var(--line)}
+  button{font-family:inherit}
+  .btn{
+    background:var(--panel2);border:1px solid var(--line);color:var(--text);
+    border-radius:10px;padding:11px 16px;font-size:14px;font-weight:500;cursor:pointer;
+  }
+  .btn:active{transform:scale(.98)}
+  .btn-amber{background:var(--amber);border-color:var(--amber);color:#17130A;font-weight:700}
+  .btn-ghost{background:none}
+  .btn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+
+  /* ---------- today ---------- */
+  .day-banner{
+    background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--amber);
+    border-radius:0 12px 12px 0;padding:16px 18px;margin-bottom:18px;
+  }
+  .day-banner .phase{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+  .day-banner h2{font-family:var(--display);font-weight:500;font-size:22px;margin:6px 0 4px}
+  .day-banner p{margin:0;color:var(--muted);font-size:14px}
+
+  .step{
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    margin-bottom:10px;overflow:hidden;
+  }
+  .step-head{display:flex;align-items:flex-start;gap:13px;padding:15px 16px;cursor:pointer}
+  .check{
+    width:24px;height:24px;border-radius:7px;border:1.5px solid var(--line);
+    flex-shrink:0;margin-top:1px;display:grid;place-items:center;background:none;cursor:pointer;
+    transition:background .15s,border-color .15s;
+  }
+  .check svg{width:13px;height:13px;opacity:0;transition:opacity .15s}
+  .step.done .check{background:var(--amber);border-color:var(--amber)}
+  .step.done .check svg{opacity:1}
+  .step.done .step-title{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+  .step-title{font-weight:500;font-size:15px;line-height:1.35;margin:0}
+  .step-meta{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.04em}
+  .step-body{padding:0 16px 16px 53px;font-size:14px;color:#BFC5D0}
+  .step-body ul{margin:0;padding-left:17px}
+  .step-body li{margin-bottom:6px}
+  .step-body strong{color:var(--text);font-weight:600}
+  .chev{margin-left:auto;color:var(--muted);flex-shrink:0;transition:transform .2s;font-size:12px}
+  .step.open .chev{transform:rotate(90deg)}
+  .hidden{display:none}
+
+  /* ---------- sustain meter (signature) ---------- */
+  .meter-card{padding:22px 18px 18px}
+  .meter-readout{
+    font-family:var(--display);font-size:76px;font-weight:300;line-height:.9;
+    letter-spacing:-.03em;font-variant-numeric:tabular-nums;
+  }
+  .meter-readout .unit{font-family:var(--mono);font-size:15px;color:var(--muted);letter-spacing:.1em;margin-left:8px;font-weight:400}
+  .meter-sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+  .track{
+    position:relative;height:56px;margin:22px 0 10px;
+    background:var(--panel2);border-radius:8px;overflow:hidden;
+  }
+  .zone{position:absolute;top:0;bottom:0;background:rgba(127,180,155,.13);border-left:1px dashed rgba(127,180,155,.45);border-right:1px dashed rgba(127,180,155,.45)}
+  .fill{position:absolute;top:0;bottom:0;left:0;width:0;background:var(--amber-soft);border-right:2px solid var(--amber)}
+  .pb-mark{position:absolute;top:0;bottom:0;width:1px;background:var(--muted)}
+  .track-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em}
+  .live .fill{transition:none}
+  .big-action{width:100%;padding:18px;font-size:16px;border-radius:12px;margin-top:16px}
+  .reps{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+  .rep{
+    font-family:var(--mono);font-size:13px;padding:7px 11px;border-radius:8px;
+    background:var(--panel2);border:1px solid var(--line);color:var(--muted);
+  }
+  .rep.filled{color:var(--amber);border-color:rgba(240,162,51,.4)}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+  .stat{background:var(--panel2);border-radius:10px;padding:12px}
+  .stat .v{font-family:var(--display);font-size:24px;font-weight:500;line-height:1}
+  .stat .k{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:5px}
+
+  /* rest timer */
+  .rest-bar{display:flex;gap:8px;align-items:center;margin-top:14px}
+  .rest-chip{
+    font-family:var(--mono);font-size:12px;padding:9px 13px;border-radius:9px;
+    background:none;border:1px solid var(--line);color:var(--muted);cursor:pointer;
+  }
+  .rest-chip.active{border-color:var(--amber);color:var(--amber)}
+
+  /* ---------- ladder ---------- */
+  .rung{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .rung:last-child{border-bottom:0}
+  .dyn{font-family:var(--display);font-style:italic;font-weight:700;font-size:26px;width:44px;flex-shrink:0;color:var(--amber);text-align:center}
+  .rung-txt{flex:1;font-size:14px}
+  .rung-txt .pct{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+
+  /* ---------- chart ---------- */
+  .chart{width:100%;height:190px;display:block}
+  .log-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .log-row:last-child{border-bottom:0}
+  .log-row .d{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .log-row .v{font-family:var(--mono)}
+  .empty{color:var(--muted);font-size:14px;text-align:center;padding:26px 10px}
+
+  textarea{
+    width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+    color:var(--text);font-family:inherit;font-size:14px;padding:12px;resize:vertical;min-height:80px;
+  }
+  textarea:focus{outline:none;border-color:var(--amber)}
+
+  .note{font-size:13px;color:var(--muted);line-height:1.55}
+  .stop-list li{margin-bottom:5px}
+  .danger{border-left:3px solid var(--red);border-radius:0 12px 12px 0}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow" id="todayDate">—</p>
+    <div class="headline-row">
+      <h1>Sustain<br><em>vocal log</em></h1>
+      <div class="countdown">
+        <div class="num" id="cdNum">—</div>
+        <div class="lbl">days to prelim</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= TODAY ================= -->
+  <section id="view-today">
+    <div class="day-banner">
+      <div class="phase" id="dayPhase">—</div>
+      <h2 id="dayTitle">—</h2>
+      <p id="dayNote">—</p>
+    </div>
+    <div id="stepList"></div>
+
+    <div class="section-label">Rest timer</div>
+    <div class="panel">
+      <div class="meter-sub" style="margin:0 0 10px">Rest is the training. Don't skip it.</div>
+      <div class="rest-bar">
+        <button class="rest-chip" data-rest="15">15s</button>
+        <button class="rest-chip" data-rest="30">30s</button>
+        <button class="rest-chip" data-rest="60">60s</button>
+        <button class="rest-chip" data-rest="90">90s</button>
+        <div style="margin-left:auto;font-family:var(--mono);font-size:20px" id="restDisplay">—</div>
+      </div>
+    </div>
+
+    <div class="section-label">Volume ladder</div>
+    <div class="panel">
+      <div class="rung"><div class="dyn">mp</div><div class="rung-txt">Conversational. Next room can't make out words. <span class="pct">60%</span></div></div>
+      <div class="rung"><div class="dyn">mf</div><div class="rung-txt">Across a restaurant table over noise. <span class="pct">75%</span></div></div>
+      <div class="rung"><div class="dyn">f</div><div class="rung-txt">Calling to someone across a parking lot. <span class="pct">90%</span></div></div>
+      <div class="rung"><div class="dyn">ff</div><div class="rung-txt">Stage. Breath left at the end of the last phrase. <span class="pct">full</span></div></div>
+    </div>
+
+    <div class="section-label">Session notes</div>
+    <div class="panel">
+      <textarea id="notes" placeholder="Where did the tone stop ringing forward? What phrase ran out of air?"></textarea>
+    </div>
+
+    <div class="section-label">Stop conditions</div>
+    <div class="panel danger">
+      <ul class="note stop-list" style="margin:0;padding-left:18px">
+        <li>Pain anywhere in the throat</li>
+        <li>Scratchy or raw feeling</li>
+        <li>Speaking voice rough afterward</li>
+        <li>A note you had yesterday that isn't there today</li>
+      </ul>
+      <p class="note" style="margin:12px 0 0">Any one of those means done for the day.</p>
+    </div>
+  </section>
+
+  <!-- ================= BREATH ================= -->
+  <section id="view-breath" class="hidden">
+    <div class="panel meter-card">
+      <div class="meter-readout"><span id="timeVal">0.0</span><span class="unit">SEC</span></div>
+      <div class="meter-sub" id="breathState">Steady hiss — stop when it wavers</div>
+
+      <div class="track" id="track">
+        <div class="zone" id="zone"></div>
+        <div class="pb-mark" id="pbMark"></div>
+        <div class="fill" id="fill"></div>
+      </div>
+      <div class="track-labels"><span>0</span><span>10</span><span>20</span><span id="zoneLbl">25–30 TARGET</span><span>40</span></div>
+
+      <button class="btn btn-amber big-action" id="breathBtn">Start rep 1</button>
+
+      <div class="reps" id="repList"></div>
+
+      <div class="stat-grid">
+        <div class="stat"><div class="v" id="sBest">—</div><div class="k">today best</div></div>
+        <div class="stat"><div class="v" id="sAvg">—</div><div class="k">today avg</div></div>
+        <div class="stat"><div class="v" id="sPb">—</div><div class="k">all-time</div></div>
+      </div>
+
+      <div class="row" style="margin-top:14px">
+        <button class="btn btn-ghost" id="saveBreath">Save session</button>
+        <button class="btn btn-ghost" id="clearReps">Clear reps</button>
+      </div>
+    </div>
+
+    <div class="section-label">How to do it</div>
+    <div class="panel">
+      <ul class="note" style="margin:0;padding-left:18px">
+        <li>Stand. One hand on your belly above the navel, one on your upper chest.</li>
+        <li>Inhale through the mouth for 2 counts. Belly hand moves out. Chest hand does not move.</li>
+        <li>Exhale on <strong>sss</strong> — teeth nearly closed, tongue tip behind the bottom teeth.</li>
+        <li>Stop the clock the moment it wobbles, flutters, or fades. That's the number, not how long you can make noise.</li>
+        <li>6 reps, 15 seconds rest between.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= PROGRESS ================= -->
+  <section id="view-progress" class="hidden">
+    <div class="section-label">Steady hiss — daily best</div>
+    <div class="panel">
+      <svg class="chart" id="chart" viewBox="0 0 600 190" preserveAspectRatio="none" aria-label="Daily best breath hold"></svg>
+      <div class="track-labels" style="margin-top:8px"><span id="chartFrom">—</span><span id="chartTo">—</span></div>
+    </div>
+
+    <div class="section-label">Log</div>
+    <div class="panel" id="logPanel"><div class="empty">No sessions saved yet.</div></div>
+
+    <div class="section-label">Data</div>
+    <div class="panel">
+      <div class="row">
+        <button class="btn btn-ghost" id="exportBtn">Export JSON</button>
+        <button class="btn btn-ghost" id="wipeBtn">Erase all data</button>
+      </div>
+      <p class="note" style="margin:12px 0 0">Saved on this device only.</p>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs" role="tablist">
+  <div class="tabs-inner">
+    <button class="tab" role="tab" aria-selected="true" data-view="today">Today</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="breath">Breath</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="progress">Progress</button>
+  </div>
+</nav>
+
+<script>
+/* ---------------- storage shim: artifact API, else localStorage ---------------- */
+const Store = {
+  async get(k){
+    try{
+      if(window.storage && window.storage.get){
+        const r = await window.storage.get(k); return r ? JSON.parse(r.value) : null;
+      }
+    }catch(e){ /* key missing or unavailable */ }
+    try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; }catch(e){ return null; }
+  },
+  async set(k,v){
+    const s = JSON.stringify(v);
+    try{ if(window.storage && window.storage.set){ await window.storage.set(k,s); return; } }catch(e){}
+    try{ localStorage.setItem(k,s); }catch(e){}
+  }
+};
+
+const KEY = 'sustain-v1';
+let state = { sessions:{}, breath:{} , allTimeBest:0 };
+
+/* ---------------- schedule ---------------- */
+const CHECK = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3.2L13 4.8" stroke="#17130A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+const S = {
+  breath:{t:'Breath work', m:'3 min · 6 reps', b:`<ul>
+    <li>Hand on belly, hand on chest. Inhale 2 counts — <strong>belly moves, chest stays still</strong>.</li>
+    <li>Exhale on <strong>sss</strong>, teeth nearly closed, tongue behind bottom teeth.</li>
+    <li>Stop the second it wavers. Log it on the Breath tab.</li>
+    <li>15 seconds rest between reps.</li></ul>`},
+  messa:{t:'Messa di voce — 5 pitches', m:'2 passes each · 30s rest', b:`<ul>
+    <li>One pitch, one breath: barely audible → full over 4 sec → back down over 4 sec. Smooth ramp, no steps.</li>
+    <li>1. comfortable low chest note &nbsp; 2. a third above &nbsp; 3. a fifth above that</li>
+    <li>4. <strong>your chorus top note</strong>, down a whole step to match the KaraFun key</li>
+    <li>5. <strong>one whole step above that</strong> — training above the ceiling is what makes the ceiling easy</li>
+    <li>If the swell breaks up or goes breathy, shorten the ramp to 3 seconds and hold there for a few days.</li></ul>`},
+  descent:{t:'Four-pass descent', m:'~6 min per cycle', b:`<ul>
+    <li><strong>1 · SOVT tube</strong> — chorus melody, no words, mezzo. Lips sealed, jaw loose, tongue flat. Water models: 2cm depth.</li>
+    <li><strong>2 · ng</strong> — off the device. Buzz in nose and cheekbones. Feels swallowed? Drop the tongue slightly.</li>
+    <li><strong>3 · vuh</strong> — top teeth on inside of bottom lip, sustain the v between pitches so the buzz never stops. Loudest of the first three.</li>
+    <li><strong>4 · words</strong> — mezzo only. You're checking whether the placement survived the consonants.</li>
+    <li>Cap any single tube pass at 90 seconds. Lightheaded means you're blowing too hard.</li></ul>`},
+  chorus2:{t:'Chorus, full voice ×2', m:'90s rest between', b:`<ul>
+    <li>Two passes. Not ten.</li>
+    <li>90 seconds rest between each — the rest is the training.</li></ul>`},
+  ladder:{t:'Volume ladder', m:'mp → mf → f → ff', b:`<ul>
+    <li>One chorus pass per rung, in order, 60 seconds rest between.</li>
+    <li><strong>Diagnostic:</strong> at ff you should still have breath left at the end of the last phrase.</li>
+    <li>Empty, neck engaging, or tone thinning? Next session run mp → 70 → 80 → f and stop there.</li></ul>`},
+  full3:{t:'Full song ×3 max', m:'verses at 65%', b:`<ul>
+    <li>Verses deliberately held back. It will feel like under-doing it. It isn't.</li>
+    <li>Three passes maximum.</li></ul>`},
+  dress:{t:'Dress rehearsal ×2', m:'KaraFun track · 15 min apart', b:`<ul>
+    <li>Standing, mic in hand, no stopping for mistakes.</li>
+    <li>Record both. <strong>Ignore pitch errors.</strong> Listen for where the tone stops ringing forward and turns pressed or dull.</li>
+    <li>Note that timestamp — that's where you take a lower, quicker breath.</li></ul>`},
+  taper:{t:'Mark through once — then stop', m:'50% volume', b:`<ul>
+    <li>Full song once at half volume. Drop the high notes an octave if you want.</li>
+    <li>Nothing full-voice. The gain from the week happens while you rest.</li></ul>`},
+  hydrate:{t:'Hydration only', m:'no device, no singing', b:`<ul>
+    <li>Cabin humidity runs under 20% — that dries your folds more than a hard rehearsal does.</li>
+    <li>Drink past the point where it feels like enough.</li></ul>`},
+  compday:{t:'Competition day', m:'protect the voice', b:`<ul>
+    <li>Breath work + four-pass descent. No full-voice run of the song.</li>
+    <li>Mist 30 min before you're up. Warm tea, never hot, and not right before you go on.</li>
+    <li>Verses at 65%. Save the ad-libs and the biggest delivery for the final chorus and outro.</li></ul>`}
+};
+
+const PLAN = {
+  '2026-08-02':{p:'Day 1 of 8 · Capacity', t:'Build the tank', n:'Two descent cycles. Two full-voice chorus passes. That is the whole day.', s:['breath','messa','descent','descent','chorus2']},
+  '2026-08-03':{p:'Day 2 of 8 · Capacity', t:'Build the tank', n:'Same as yesterday. Watch the hiss number climb.', s:['breath','messa','descent','descent','chorus2']},
+  '2026-08-04':{p:'Day 3 of 8 · Capacity', t:'Build the tank', n:'Last capacity day. Resist adding volume.', s:['breath','messa','descent','descent','chorus2']},
+  '2026-08-05':{p:'Day 4 of 8 · Volume ladder', t:'Climb the rungs', n:'Ladder enters. Full song passes begin, verses held back.', s:['breath','messa','descent','ladder','full3']},
+  '2026-08-06':{p:'Day 5 of 8 · Volume ladder', t:'Climb the rungs', n:'If ff felt like a reach yesterday, drop a rung today.', s:['breath','messa','descent','ladder','full3']},
+  '2026-08-07':{p:'Day 6 of 8 · Volume ladder', t:'Climb the rungs', n:'Last loading day before the dress run.', s:['breath','messa','descent','ladder','full3']},
+  '2026-08-08':{p:'Day 7 of 8 · Dress rehearsal', t:'Run it cold', n:'Two full passes with the track, 15 minutes apart. Record both.', s:['breath','messa','descent','dress']},
+  '2026-08-09':{p:'Day 8 of 8 · Taper', t:'Back off', n:'Half volume, once through. The taper is not optional.', s:['breath','descent','taper']},
+  '2026-08-10':{p:'Travel · DFW → LAS', t:'Fly day', n:'Water only. No device work, no singing.', s:['hydrate']},
+  '2026-08-11':{p:'Prelim', t:'Round 1', n:'Warm up, do not rehearse. Save it for the room.', s:['breath','descent','compday']},
+  '2026-08-12':{p:'Between rounds', t:'Recover', n:'Light. Breath work and the descent, nothing more.', s:['breath','descent','hydrate']},
+  '2026-08-13':{p:'Final', t:'Round 3', n:'Everything you built is already in there.', s:['breath','descent','compday']}
+};
+const DEFAULT_DAY = {p:'Maintenance', t:'Keep the engine warm', n:'Breath, messa di voce, one descent cycle.', s:['breath','messa','descent']};
+
+const PRELIM = new Date('2026-08-11T00:00:00');
+
+/* ---------------- helpers ---------------- */
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,'0');
+const todayKey = () => { const d=new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+const fmtDate = k => { const [y,m,d]=k.split('-'); return new Date(y,m-1,d).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}); };
+const shortDate = k => { const [y,m,d]=k.split('-'); return `${m}/${d}`; };
+
+/* ---------------- render: today ---------------- */
+function renderToday(){
+  const k = todayKey();
+  const day = PLAN[k] || DEFAULT_DAY;
+  $('todayDate').textContent = fmtDate(k);
+  $('dayPhase').textContent = day.p;
+  $('dayTitle').textContent = day.t;
+  $('dayNote').textContent = day.n;
+
+  const diff = Math.ceil((PRELIM - new Date().setHours(0,0,0,0))/86400000);
+  $('cdNum').textContent = diff > 0 ? diff : (diff === 0 ? 'TODAY' : '—');
+
+  const sess = state.sessions[k] || {done:[],notes:''};
+  const html = day.s.map((id,i)=>{
+    const s = S[id]; const on = sess.done.includes(i);
+    return `<div class="step ${on?'done':''}" data-i="${i}">
+      <div class="step-head">
+        <button class="check" aria-label="Mark complete" aria-pressed="${on}">${CHECK}</button>
+        <div style="flex:1">
+          <p class="step-title">${s.t}</p>
+          <div class="step-meta">${s.m}</div>
+        </div>
+        <span class="chev">▶</span>
+      </div>
+      <div class="step-body hidden">${s.b}</div>
+    </div>`;
+  }).join('');
+  $('stepList').innerHTML = html;
+  $('notes').value = sess.notes || '';
+
+  $('stepList').querySelectorAll('.step').forEach(el=>{
+    const i = +el.dataset.i;
+    el.querySelector('.check').addEventListener('click', e=>{ e.stopPropagation(); toggleStep(i); });
+    el.querySelector('.step-head').addEventListener('click', ()=>{
+      el.classList.toggle('open');
+      el.querySelector('.step-body').classList.toggle('hidden');
+    });
+  });
+}
+
+async function toggleStep(i){
+  const k = todayKey();
+  const s = state.sessions[k] || {done:[],notes:''};
+  s.done = s.done.includes(i) ? s.done.filter(x=>x!==i) : [...s.done,i];
+  state.sessions[k] = s;
+  await Store.set(KEY,state);
+  renderToday();
+}
+
+$('notes').addEventListener('input', async e=>{
+  const k = todayKey();
+  const s = state.sessions[k] || {done:[],notes:''};
+  s.notes = e.target.value;
+  state.sessions[k] = s;
+  await Store.set(KEY,state);
+});
+
+/* ---------------- breath timer ---------------- */
+const MAX = 40;
+let running=false, t0=0, raf=null, reps=[];
+
+function paintTrack(){
+  $('zone').style.left = (25/MAX*100)+'%';
+  $('zone').style.width = ((30-25)/MAX*100)+'%';
+  const pb = state.allTimeBest||0;
+  $('pbMark').style.left = Math.min(pb/MAX*100,100)+'%';
+  $('pbMark').style.display = pb>0 ? 'block':'none';
+}
+function tick(){
+  const s = (performance.now()-t0)/1000;
+  $('timeVal').textContent = s.toFixed(1);
+  $('fill').style.width = Math.min(s/MAX*100,100)+'%';
+  raf = requestAnimationFrame(tick);
+}
+$('breathBtn').addEventListener('click', ()=>{
+  if(reps.length>=6 && !running) return;
+  if(!running){
+    running=true; t0=performance.now();
+    $('track').classList.add('live');
+    $('breathBtn').textContent='Stop — it wavered';
+    $('breathBtn').classList.remove('btn-amber');
+    $('breathState').textContent='Hold it flat and even';
+    tick();
+  }else{
+    running=false; cancelAnimationFrame(raf);
+    const s = +((performance.now()-t0)/1000).toFixed(1);
+    reps.push(s);
+    if(s > (state.allTimeBest||0)){ state.allTimeBest=s; Store.set(KEY,state); }
+    $('breathBtn').classList.add('btn-amber');
+    $('breathBtn').textContent = reps.length>=6 ? 'Six reps done — save below' : `Start rep ${reps.length+1}`;
+    $('breathState').textContent = reps.length>=6 ? 'Session complete' : 'Rest 15 seconds';
+    if(reps.length<6) startRest(15);
+    renderReps(); paintTrack();
+  }
+});
+function renderReps(){
+  $('repList').innerHTML = Array.from({length:6},(_,i)=>
+    `<span class="rep ${reps[i]!==undefined?'filled':''}">${i+1} · ${reps[i]!==undefined?reps[i].toFixed(1)+'s':'—'}</span>`).join('');
+  const best = reps.length?Math.max(...reps):null;
+  const avg = reps.length?reps.reduce((a,b)=>a+b,0)/reps.length:null;
+  $('sBest').textContent = best?best.toFixed(1):'—';
+  $('sAvg').textContent = avg?avg.toFixed(1):'—';
+  $('sPb').textContent = state.allTimeBest?state.allTimeBest.toFixed(1):'—';
+}
+$('clearReps').addEventListener('click', ()=>{ reps=[]; $('timeVal').textContent='0.0'; $('fill').style.width='0'; $('breathBtn').textContent='Start rep 1'; $('breathState').textContent='Steady hiss — stop when it wavers'; renderReps(); });
+$('saveBreath').addEventListener('click', async ()=>{
+  if(!reps.length) return;
+  state.breath[todayKey()] = {reps:[...reps], best:Math.max(...reps), avg:+(reps.reduce((a,b)=>a+b,0)/reps.length).toFixed(1)};
+  await Store.set(KEY,state);
+  $('breathState').textContent='Saved';
+  renderProgress();
+});
+
+/* rest countdown */
+let restId=null;
+function startRest(sec){
+  clearInterval(restId);
+  let left=sec;
+  $('restDisplay').textContent = left+'s';
+  restId = setInterval(()=>{
+    left--;
+    $('restDisplay').textContent = left>0 ? left+'s' : 'go';
+    if(left<=0){ clearInterval(restId); document.querySelectorAll('.rest-chip').forEach(c=>c.classList.remove('active')); }
+  },1000);
+}
+document.querySelectorAll('.rest-chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('.rest-chip').forEach(x=>x.classList.remove('active'));
+  c.classList.add('active');
+  startRest(+c.dataset.rest);
+}));
+
+/* ---------------- progress ---------------- */
+function renderProgress(){
+  const keys = Object.keys(state.breath).sort();
+  const svg = $('chart');
+  if(!keys.length){
+    svg.innerHTML = '<text x="300" y="100" fill="#8C95A5" font-size="13" text-anchor="middle" font-family="DM Mono, monospace">No data yet</text>';
+    $('logPanel').innerHTML = '<div class="empty">No sessions saved yet.</div>';
+    return;
+  }
+  const vals = keys.map(k=>state.breath[k].best);
+  const W=600,H=190,P=14;
+  const maxY = Math.max(30, Math.ceil(Math.max(...vals)/5)*5);
+  const x = i => keys.length===1 ? W/2 : P + i*((W-2*P)/(keys.length-1));
+  const y = v => H-P - (v/maxY)*(H-2*P);
+
+  let g = '';
+  // target band 25-30
+  g += `<rect x="0" y="${y(30)}" width="${W}" height="${y(25)-y(30)}" fill="rgba(127,180,155,.12)"/>`;
+  g += `<line x1="0" y1="${y(25)}" x2="${W}" y2="${y(25)}" stroke="rgba(127,180,155,.45)" stroke-width="1" stroke-dasharray="4 4"/>`;
+  const pts = keys.map((k,i)=>`${x(i)},${y(state.breath[k].best)}`).join(' ');
+  g += `<polyline points="${pts}" fill="none" stroke="#F0A233" stroke-width="2" stroke-linejoin="round"/>`;
+  keys.forEach((k,i)=>{ g += `<circle cx="${x(i)}" cy="${y(state.breath[k].best)}" r="3.5" fill="#0E1117" stroke="#F0A233" stroke-width="2"/>`; });
+  svg.innerHTML = g;
+
+  $('chartFrom').textContent = shortDate(keys[0]);
+  $('chartTo').textContent = shortDate(keys[keys.length-1]);
+
+  $('logPanel').innerHTML = keys.slice().reverse().map(k=>{
+    const b = state.breath[k];
+    return `<div class="log-row"><span class="d">${shortDate(k)}</span><span class="v">best ${b.best.toFixed(1)}s &nbsp;·&nbsp; avg ${b.avg.toFixed(1)}s</span></div>`;
+  }).join('');
+}
+
+$('exportBtn').addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='sustain-log.json'; a.click();
+});
+$('wipeBtn').addEventListener('click', async ()=>{
+  if(!confirm('Erase all logged sessions? This cannot be undone.')) return;
+  state={sessions:{},breath:{},allTimeBest:0};
+  await Store.set(KEY,state);
+  reps=[]; renderToday(); renderReps(); renderProgress(); paintTrack();
+});
+
+/* ---------------- tabs ---------------- */
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected','false'));
+  t.setAttribute('aria-selected','true');
+  ['today','breath','progress'].forEach(v=>$('view-'+v).classList.toggle('hidden', v!==t.dataset.view));
+  window.scrollTo(0,0);
+  if(t.dataset.view==='progress') renderProgress();
+}));
+
+/* ---------------- boot ---------------- */
+(async ()=>{
+  const saved = await Store.get(KEY);
+  if(saved) state = Object.assign(state, saved);
+  renderToday(); renderReps(); paintTrack(); renderProgress();
+})();
+</script>
+</body>
+</html>
