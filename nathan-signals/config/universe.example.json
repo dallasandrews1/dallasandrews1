@@ -1,0 +1,57 @@
+{
+  "_about": "Example only. The real file is config/universe.local.json (gitignored). One entry per account the rep is actively working. Only accounts in this file can ever be posted. status: net-new | customer | unknown. Customer accounts reach the rep channel only with ae_cleared true on an install_base lane; otherwise they route to the owner DM.",
+  "rep": {
+    "name": "Rep Name",
+    "slack_user_id": "UXXXXXXXX",
+    "timezone": "America/New_York"
+  },
+  "owner": {
+    "name": "Dallas Andrews",
+    "slack_user_id": "UXXXXXXXX"
+  },
+  "never_name": ["ExampleVendorA", "ExampleVendorB"],
+  "lanes": [
+    {
+      "lane": "Stars - Example Lane",
+      "motion": "star_ratings",
+      "install_base": false,
+      "angle": "the customer-service and CAHPS measures are the movable part of the Star score and they're set in the service centers the plan already funds",
+      "accounts": [
+        {
+          "account": "Example Health Plan",
+          "slug": "example-health-plan",
+          "status": "net-new",
+          "domain": "examplehealthplan.com",
+          "contracts": ["H0000"],
+          "contacts": [
+            {"name": "Jane Doe", "title": "VP Operations", "state": "in-sequence", "step": "email 2 sent"}
+          ]
+        }
+      ]
+    },
+    {
+      "lane": "BO Expansion - Example Vertical",
+      "motion": "back_office",
+      "install_base": true,
+      "angle": "the back office runs on yesterday's report; the cost lives in the idle minutes between reports",
+      "accounts": [
+        {
+          "account": "Example Insurer",
+          "slug": "example-insurer",
+          "status": "customer",
+          "ae_cleared": false,
+          "ae": "AE name",
+          "domain": "exampleinsurer.com",
+          "links": [{"label": "campaign", "url": "https://app.lemlist.com/..."}],
+          "contacts": [
+            {"name": "John Roe", "title": "Director Claims Operations", "state": "connected", "step": "LinkedIn DM task waiting"}
+          ]
+        }
+      ]
+    }
+  ],
+  "held": [
+    {"account": "Example Partner Account", "slug": "example-partner-account", "status": "owned_elsewhere", "why": "partner channel owns it"},
+    {"account": "Example Suppressed Customer", "slug": "example-suppressed", "status": "suppressed", "why": "customer, no outbound lane"}
+  ]
+}
