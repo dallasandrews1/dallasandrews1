@@ -1,0 +1,9 @@
+# local-only: real account universe, env, run outputs
+config/universe.local.json
+.env.local
+state/*
+out/*
+logs/*
+!state/.gitkeep
+!out/.gitkeep
+!logs/.gitkeep
